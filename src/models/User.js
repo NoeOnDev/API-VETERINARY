@@ -56,21 +56,34 @@ User.init({
             notEmpty: { msg: "La contraseña no puede estar vacía" }
         }
     },
+    locked: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        validate: {
+            notNull: { msg: "El estado de bloqueo es requerido"},
+        }
+    },
     role: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'client',
         validate: {
-            isIn: [[ 'admin', 'moderator', 'client']],
+            isIn: [[ 'admin', 'moderator', 'veterinarian','client']],
             notNull: { msg: "El rol es requerido" },
             notEmpty: { msg: "El rol no puede estar vacío" }
         }
+    },
+    deleteAt: {
+        type: DataTypes.DATE,
+        allowNull: true
     }
 }, {
     sequelize,
     modelName: 'User',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    paranoid: true,
     hooks: {
         beforeCreate: async (user) => {
             const salt = await bcrypt.genSalt();
@@ -89,3 +102,5 @@ User.init({
         { unique: true, fields: [ 'email' ] }
     ]
 });
+
+export default User;
