@@ -121,4 +121,8 @@ User.init({
     ]
 });
 
+User.prototype.authenticate = function (password) {
+    return bcrypt.compare(password, this.password);
+};
+
 export default User;
