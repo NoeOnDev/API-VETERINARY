@@ -55,6 +55,16 @@ User.init({
             notNull: { msg: "La contraseña es requerida" },
             notEmpty: { msg: "La contraseña no puede estar vacía" }
         }
+    },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'client',
+        validate: {
+            isIn: [[ 'admin', 'moderator', 'client']],
+            notNull: { msg: "El rol es requerido" },
+            notEmpty: { msg: "El rol no puede estar vacío" }
+        }
     }
 }, {
     sequelize,
@@ -65,6 +75,17 @@ User.init({
         beforeCreate: async (user) => {
             const salt = await bcrypt.genSalt();
             user.password = await bcrypt.hash(user.password, salt);
+
+            const count = await User.count();
+            if (count === 0) {
+                user.role = 'admin';
+            } else {
+                user.role = 'client';
+            }
         }
-    }
+    },
+    indexes: [ 
+        { unique: true, fields: [ 'username' ] },
+        { unique: true, fields: [ 'email' ] }
+    ]
 });
