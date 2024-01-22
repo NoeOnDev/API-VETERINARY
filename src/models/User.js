@@ -10,7 +10,8 @@ User.init({
         allowNull: false,
         validate: {
             notNull: { msg: "El nombre es requerido" },
-            notEmpty: { msg: "El nombre no puede estar vacío" }
+            notEmpty: { msg: "El nombre no puede estar vacío" },
+            len: { args: [3, 20], msg: "El nombre debe tener entre 3 y 20 caracteres" },
         }
     },
     lastname: {
@@ -18,7 +19,8 @@ User.init({
         allowNull: false,
         validate: {
             notNull: { msg: "El apellido es requerido" },
-            notEmpty: { msg: "El apellido no puede estar vacío" }
+            notEmpty: { msg: "El apellido no puede estar vacío" },
+            len: { args: [3, 20], msg: "El apellido debe tener entre 3 y 20 caracteres" },
         }
     },
     username: {
@@ -27,7 +29,8 @@ User.init({
         unique: { msg: "El nombre de usuario ya está en uso" },
         validate: {
             notNull: { msg: "El nombre de usuario es requerido" },
-            notEmpty: { msg: "El nombre de usuario no puede estar vacío" }
+            notEmpty: { msg: "El nombre de usuario no puede estar vacío" },
+            len: { args: [3, 20], msg: "El nombre de usuario debe tener entre 3 y 20 caracteres" },
         }
     },
     phone: {
@@ -54,6 +57,21 @@ User.init({
         validate: {
             notNull: { msg: "La contraseña es requerida" },
             notEmpty: { msg: "La contraseña no puede estar vacía" }
+        },
+        get() {
+            return () => this.getDataValue('password');
+        },
+        set(value) {
+            const salt = bcrypt.genSaltSync();
+            this.setDataValue('password', bcrypt.hashSync(value, salt));
+        }
+    },
+    emailConfirmed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        validate: {
+            notNull: { msg: "La confirmación de correo electrónico es requerida"}
         }
     },
     locked: {
@@ -61,7 +79,7 @@ User.init({
         allowNull: false,
         defaultValue: false,
         validate: {
-            notNull: { msg: "El estado de bloqueo es requerido"},
+            notNull: { msg: "El estado de bloqueo es requerido"}
         }
     },
     role: {
