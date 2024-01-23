@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import moment from 'moment';
 import sequelize from '../database/config.js';
 import { DataTypes, Model } from 'sequelize';
 
@@ -33,6 +34,25 @@ User.init({
             len: { args: [3, 20], msg: "El nombre de usuario debe tener entre 3 y 20 caracteres" },
         }
     },
+    birthdate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+            notNull: { msg: "La fecha de nacimiento es requerida" },
+            notEmpty: { msg: "La fecha de nacimiento no puede estar vacía" },
+            isDate: { msg: "Debe ser una fecha válida" },
+            isNotFutureDate(value) {
+                if (moment(value).isAfter(moment())) {
+                    throw new Error('La fecha de nacimiento debe ser anterior a la fecha actual');
+                }
+            },
+            isOldEnough(value) {
+                if (moment().diff(moment(value), 'years') < 13) {
+                    throw new Error('Debes tener al menos 13 años para registrarte');
+                }
+            }
+        }
+    },
     phone: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -62,8 +82,10 @@ User.init({
             return () => this.getDataValue('password');
         },
         set(value) {
-            const salt = bcrypt.genSaltSync();
-            this.setDataValue('password', bcrypt.hashSync(value, salt));
+            if (value) {
+                const salt = bcrypt.genSaltSync();
+                this.setDataValue('password', bcrypt.hashSync(value, salt));
+            }
         }
     },
     emailConfirmed: {
@@ -104,9 +126,11 @@ User.init({
     paranoid: true,
     hooks: {
         beforeCreate: async (user) => {
-            const salt = await bcrypt.genSalt();
-            user.password = await bcrypt.hash(user.password, salt);
-
+            if (user.password) {
+                const salt = await bcrypt.genSalt();
+                user.password = await bcrypt.hash(user.password, salt);
+            }
+        
             const count = await User.count();
             if (count === 0) {
                 user.role = 'admin';
