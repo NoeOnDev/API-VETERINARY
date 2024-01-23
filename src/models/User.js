@@ -113,17 +113,15 @@ User.init({
             notNull: { msg: "El rol es requerido" },
             notEmpty: { msg: "El rol no puede estar vacío" }
         }
-    },
-    deleteAt: {
-        type: DataTypes.DATE,
-        allowNull: true
     }
 }, {
     sequelize,
     modelName: 'User',
+    timestamps: true,
+    paranoid: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    paranoid: true,
+    deletedAt: 'deleted_at',
     hooks: {
         beforeCreate: async (user) => {
             if (user.password) {
