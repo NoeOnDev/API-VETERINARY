@@ -1,5 +1,5 @@
 import express from 'express';
-import userRoutes from './routes/authenticateRoutes.js';
+import userRoutes from './routes/authRoutes.js';
 import { database } from './database/database.js';
 
 export async function app() {
