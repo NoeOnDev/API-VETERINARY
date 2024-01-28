@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import transporter from './mailerService.js';
 import jwt from 'jsonwebtoken';
+import { getVerificationEmailHTML } from '../templates/authenticateTemplate.js';
 
 export async function registerUser(userDetails) {
     try {
@@ -12,7 +13,7 @@ export async function registerUser(userDetails) {
             from: 'alxg5516@gmail.com',
             to: user.email,
             subject: 'Verifica tu correo electrónico',
-            text: `Haz clic en este enlace para verificar tu correo electrónico: http://127.0.0.1:9020/verify-email?token=${token}`
+            html:  getVerificationEmailHTML(token)
         };
 
         await transporter.sendMail(mailOptions);
