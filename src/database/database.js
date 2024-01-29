@@ -1,6 +1,5 @@
 import sequelize from './config.js';
 
-
 export async function database() {
     await connect();
     await sync();

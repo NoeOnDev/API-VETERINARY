@@ -7,7 +7,7 @@ export async function registerUser(userDetails) {
     try {
         const user = await User.create(userDetails);
 
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '3m' });
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
         const mailOptions = {
             from: 'alxg5516@gmail.com',
@@ -24,13 +24,15 @@ export async function registerUser(userDetails) {
     }
 }
 
+
+
 export async function verifyEmailUser(token) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         const user = await User.findByPk(decoded.id);
         if (!user) {
-            throw new Error('No se encontró el usuario');
+            throw new Error('User not found');
         }
 
         user.emailConfirmed = true;
