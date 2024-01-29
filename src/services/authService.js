@@ -24,7 +24,33 @@ export async function registerUser(userDetails) {
     }
 }
 
+export async function resendVerificationEmail(userEmail) {
+    try {
+        const user = await User.findOne({ where: { email: userEmail } });
+        if (!user) {
+            throw new Error('User not found');
+        }
 
+        if (user.emailConfirmed) {
+            throw new Error('Email already confirmed');
+        }
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+
+        const mailOptions = {
+            from: 'alxg5516@gmail.com',
+            to: user.email,
+            subject: 'Verifica tu correo electrónico',
+            html:  getVerificationEmailHTML(token)
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export async function verifyEmailUser(token) {
     try {
