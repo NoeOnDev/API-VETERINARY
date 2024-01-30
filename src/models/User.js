@@ -58,7 +58,9 @@ User.init({
         allowNull: false,
         validate: {
             notNull: { msg: "El teléfono es requerido" },
-            notEmpty: { msg: "El teléfono no puede estar vacío" }
+            notEmpty: { msg: "El teléfono no puede estar vacío" },
+            isNumeric: { msg: "El teléfono debe ser numérico" },
+            len: { args: [10, 10], msg: "El teléfono debe tener 10 dígitos" },
         }
     },
     email: {
