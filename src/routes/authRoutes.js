@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, resendVerification,verifyEmail } from '../controllers/authController.js';
+import { register, resendVerification, verifyEmail } from '../controllers/authController.js';
 
 const router = Router();
 
