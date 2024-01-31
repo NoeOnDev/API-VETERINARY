@@ -25,7 +25,7 @@ export async function close() {
 
 export async function sync() {
     try {
-        await sequelize.sync();
+        await sequelize.sync( { force: true });
         console.log('All models were synchronized successfully.');
     } catch (error) {
         console.error('Unable to synchronize the database:', error.message);
