@@ -1,4 +1,4 @@
-import { registerUser, resendVerificationEmail,verifyEmailUser } from '../services/authService.js';
+import { registerUser, resendVerificationEmail,verifyEmailUser, loginUser } from '../services/authService.js';
 
 export async function register(req, res) {
     try {
@@ -33,6 +33,22 @@ export async function verifyEmail(req, res) {
         res.status(200).json({
             message: 'Email verified successfully',
             userId: user.id
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export async function login(req, res) {
+    try {
+        const credenciales = req.body;
+
+        const { user, token } = await loginUser(credenciales);
+
+        res.status(200).json({
+            message: 'Login successful',
+            userId: user.id,
+            token: token
         });
     } catch (error) {
         res.status(500).json({ error: error.message });

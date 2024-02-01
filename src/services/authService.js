@@ -70,7 +70,7 @@ export async function verifyEmailUser(token) {
     }
 }
 
-export async function login(credentials) {
+export async function loginUser(credentials) {
     try {
         const user = await User.findOne({ where: { email: credentials.email } });
         if (!user) {
@@ -81,7 +81,7 @@ export async function login(credentials) {
             throw new Error('Email not confirmed');
         }
 
-        const isPasswordValid = await user.isPasswordValid(credentials.password);
+        const isPasswordValid = await user.authenticate(credentials.password);
         if (!isPasswordValid) {
             throw new Error('Invalid password');
         }
@@ -90,6 +90,6 @@ export async function login(credentials) {
 
         return { user, token };
     } catch (error) {
-        
+        throw error;
     }
 }
