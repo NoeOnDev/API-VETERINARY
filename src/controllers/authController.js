@@ -41,9 +41,9 @@ export async function verifyEmail(req, res) {
 
 export async function login(req, res) {
     try {
-        const credenciales = req.body;
+        const credentials = req.body;
 
-        const { user, token } = await loginUser(credenciales);
+        const { user, token } = await loginUser(credentials);
 
         res.status(200).json({
             message: 'Login successful',
