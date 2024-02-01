@@ -5,6 +5,16 @@ import { getVerificationEmailHTML } from '../templates/authTemplate.js';
 
 export async function registerUser(userDetails) {
     try {
+        const existingEmailUser = await User.findOne({ where: { email: userDetails.email } });
+        if (existingEmailUser) {
+            throw new Error('Email already registered');
+        }
+
+        const existingUsernameUser = await User.findOne({ where: { username: userDetails.username } });
+        if (existingUsernameUser) {
+            throw new Error('Username already registered');
+        }
+
         const user = await User.create(userDetails);
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
@@ -81,7 +91,7 @@ export async function loginUser(credentials) {
             throw new Error('Email not confirmed');
         }
 
-        const isPasswordValid = await user.authenticate(credentials.password);
+        const isPasswordValid = user.authenticate(credentials.password);
         if (!isPasswordValid) {
             throw new Error('Invalid password');
         }

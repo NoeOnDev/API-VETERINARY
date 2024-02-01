@@ -79,15 +79,6 @@ User.init({
         validate: {
             notNull: { msg: "La contraseña es requerida" },
             notEmpty: { msg: "La contraseña no puede estar vacía" }
-        },
-        get() {
-            return () => this.getDataValue('password');
-        },
-        set(value) {
-            if (value) {
-                const salt = bcrypt.genSaltSync();
-                this.setDataValue('password', bcrypt.hashSync(value, salt));
-            }
         }
     },
     emailConfirmed: {
