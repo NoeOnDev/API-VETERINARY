@@ -69,3 +69,27 @@ export async function verifyEmailUser(token) {
         throw error;
     }
 }
+
+export async function login(credentials) {
+    try {
+        const user = await User.findOne({ where: { email: credentials.email } });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        if (!user.emailConfirmed) {
+            throw new Error('Email not confirmed');
+        }
+
+        const isPasswordValid = await user.isPasswordValid(credentials.password);
+        if (!isPasswordValid) {
+            throw new Error('Invalid password');
+        }
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+
+        return { user, token };
+    } catch (error) {
+        
+    }
+}
