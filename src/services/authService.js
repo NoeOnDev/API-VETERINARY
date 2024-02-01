@@ -3,6 +3,30 @@ import transporter from './mailerService.js';
 import jwt from 'jsonwebtoken';
 import { getVerificationEmailHTML } from '../templates/authTemplate.js';
 
+export async function loginUser(credentials) {
+    try {
+        const user = await User.findOne({ where: { email: credentials.email } });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        if (!user.emailConfirmed) {
+            throw new Error('Email not confirmed');
+        }
+
+        const isPasswordValid = user.authenticate(credentials.password);
+        if (!isPasswordValid) {
+            throw new Error('Invalid password');
+        }
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+
+        return { user, token };
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function registerUser(userDetails) {
     try {
         const existingEmailUser = await User.findOne({ where: { email: userDetails.email } });
@@ -75,30 +99,6 @@ export async function verifyEmailUser(token) {
         await user.save();
 
         return user;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function loginUser(credentials) {
-    try {
-        const user = await User.findOne({ where: { email: credentials.email } });
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        if (!user.emailConfirmed) {
-            throw new Error('Email not confirmed');
-        }
-
-        const isPasswordValid = user.authenticate(credentials.password);
-        if (!isPasswordValid) {
-            throw new Error('Invalid password');
-        }
-
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '2h' });
-
-        return { user, token };
     } catch (error) {
         throw error;
     }

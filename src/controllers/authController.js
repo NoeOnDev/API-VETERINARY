@@ -1,5 +1,23 @@
 import { registerUser, resendVerificationEmail,verifyEmailUser, loginUser } from '../services/authService.js';
 
+
+export async function login(req, res) {
+    try {
+        const credentials = req.body;
+
+        const { user, token } = await loginUser(credentials);
+
+        res.status(200).json({
+            message: 'Login successful',
+            userId: user.id,
+            userRole: user.role, 
+            token: token
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 export async function register(req, res) {
     try {
         const user = await registerUser(req.body);
@@ -33,23 +51,6 @@ export async function verifyEmail(req, res) {
         res.status(200).json({
             message: 'Email verified successfully',
             userId: user.id,
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
-export async function login(req, res) {
-    try {
-        const credentials = req.body;
-
-        const { user, token } = await loginUser(credentials);
-
-        res.status(200).json({
-            message: 'Login successful',
-            userId: user.id,
-            userRole: user.role, 
-            token: token
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
