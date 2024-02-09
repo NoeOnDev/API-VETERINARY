@@ -8,8 +8,8 @@ Pet.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    age: {
-        type: DataTypes.INTEGER,
+    birthdate: {
+        type: DataTypes.DATEONLY,
         allowNull: false
     },
     type: {
