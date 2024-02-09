@@ -1,4 +1,4 @@
-import sequelize from './config.js';
+import sequelize from '../database/config.js';
 import { DataTypes, Model } from 'sequelize';
 import bcrypt from 'bcrypt';
 
@@ -41,3 +41,5 @@ User.init({
         },
     }
 });
+
+export default User;
