@@ -1,5 +1,6 @@
 import express from 'express';
 import { database, close } from '../database/connect.js';
+import '../models/relations.js';
 
 export async function app() {
     try {
