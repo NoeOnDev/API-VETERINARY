@@ -31,8 +31,10 @@ export async function syncronize() {
 export async function close() {
     try {
         await sequelize.close();
-        console.log('Connection has been closed successfully.');
+        console.log('Database connection closed');
+        process.exit(0);
     } catch (error) {
-        console.error('Unable to close the connection:', error);
+        console.error('Unable to close the database connection:', error);
+        process.exit(1);
     }
 }

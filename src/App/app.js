@@ -14,16 +14,7 @@ export async function app() {
         
         await database();
 
-        process.on('SIGINT', async () => {
-            try {
-                await close();
-                console.log('Database connection closed');
-                process.exit(0);
-            } catch (error) {
-                console.error('Unable to close the database connection:', error);
-                process.exit(1);
-            }
-        });
+        process.on('SIGINT', close);
     } catch (error) {
         console.error('Unable to start the server:', error.message);
     }
