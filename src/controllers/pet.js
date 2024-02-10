@@ -19,3 +19,12 @@ export async function getPet(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getPetfromUser(req, res) {
+    try {
+        const pets = await Pet.findAll({ where: { userId: req.user.id } });
+        res.status(200).json(pets);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
