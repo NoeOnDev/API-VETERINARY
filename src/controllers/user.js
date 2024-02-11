@@ -38,3 +38,12 @@ export async function getUserandPets (req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getAllUsersAndPets (req, res) {
+    try {
+        const users = await User.findAll({ include: 'pets' });
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
