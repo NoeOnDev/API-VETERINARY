@@ -11,15 +11,6 @@ export async function createPet(req, res) {
     }
 }
 
-export async function getPet(req, res) {
-    try {
-        const pet = await Pet.findByPk(req.params.id);
-        res.status(200).json(pet);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
 export async function getPetfromUser(req, res) {
     try {
         const pets = await Pet.findAll({ where: { userId: req.user.id } });
