@@ -29,3 +29,12 @@ export async function createUser(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getUserandPets (req, res) {
+    try {
+        const user = await User.findByPk(req.user.id, { include: 'pets' });
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
