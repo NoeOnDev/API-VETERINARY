@@ -47,16 +47,3 @@ export async function getAllUsersAndPets (req, res) {
         res.status(500).json({ message: error.message });
     }
 }
-
-export async function update(req, res) {
-    try {
-        const { id } = req.params;
-        const user = await User.findByPk(id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        await user.update(req.body);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
