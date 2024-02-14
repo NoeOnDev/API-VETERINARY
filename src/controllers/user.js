@@ -47,3 +47,5 @@ export async function getAllUsersAndPets (req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function update(req, res) {}
