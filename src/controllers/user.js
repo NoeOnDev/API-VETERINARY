@@ -57,6 +57,6 @@ export async function update(req, res) {
         }
         await user.update(req.body);
     } catch (error) {
-        
+        res.status(500).json({ message: error.message });
     }
 }
